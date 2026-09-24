@@ -1,7 +1,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const defaults = {
-    nama: "Sayangggg",
+    nama: "uraa sayangggg",
     pesan: "Happy birthday, sayang ❤️ semoga di umur yang baru ini, semua hal baik datang ke hidup kamu. Semoga kamu selalu diberikan kesehatan, kebahagiaan, dan kekuatan untuk melewati apa pun yang ada di depan",    
   };
 
