@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selamat Ulang Tahun!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#148a52; --bg2:#0b4a2e; --ink:#ffffff;
+  --pink:#ff9b7a; --sun:#d6f55a; --mint:#7ce0c3; --paper:#f6fff0; --deep:#0b3a24;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;
+  background:radial-gradient(120% 90% at 50% 0%,var(--bg) 0%,var(--bg2) 100%);
+  color:var(--ink); overflow-x:hidden;
+  display:flex; align-items:center; justify-content:center; min-height:100vh;
+}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+main{width:100%;max-width:640px;padding:32px 20px 56px;text-align:center;position:relative;z-index:2}
+h1{font-size:clamp(2.4rem,9vw,4.6rem);line-height:1;font-weight:800;letter-spacing:-.03em;font-variation-settings:"opsz" 96}
+h1 span{display:block;color:var(--sun)}
+.sub{margin-top:14px;opacity:.85;font-size:1.05rem}
+
+.stage{margin:28px auto 8px;width:min(300px,78vw)}
+.stage svg{width:100%;height:auto;overflow:visible}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+.flame:nth-of-type(2){animation-delay:.15s}.flame:nth-of-type(3){animation-delay:.3s}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.1) rotate(3deg)}}
+.out .flame{animation:none;opacity:0;transform:scale(.2);transition:opacity .35s,transform .35s}
+.smoke{opacity:0}
+.out .smoke{animation:rise 1.6s ease-out forwards}
+@keyframes rise{0%{opacity:.7;transform:translateY(0)}100%{opacity:0;transform:translateY(-34px)}}
+
+button{
+  font:inherit;font-weight:700;cursor:pointer;border:0;border-radius:999px;
+  padding:14px 30px;font-size:1.05rem;color:var(--deep);background:var(--sun);
+  box-shadow:0 5px 0 #93b21f;transition:transform .12s,box-shadow .12s;
+}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(4px);box-shadow:0 1px 0 #93b21f}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
+button.ghost{background:transparent;color:var(--ink);box-shadow:none;border:2px solid rgba(255,255,255,.5);padding:10px 20px;font-size:.95rem}
+
+.card{
+  margin:26px auto 0;background:var(--paper);color:var(--deep);border-radius:22px;
+  padding:26px 26px 22px;text-align:left;max-width:520px;
+  transform:rotate(-1.5deg);box-shadow:8px 8px 0 var(--pink);
+  display:none;
+}
+.card.show{display:block;animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{opacity:0;transform:rotate(-6deg) scale(.7)}to{opacity:1;transform:rotate(-1.5deg) scale(1)}}
+.card p{font-size:1.15rem;line-height:1.6;white-space:pre-line}
+.card footer{margin-top:16px;font-weight:800}
+
+.actions{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.editor{display:none;margin:22px auto 0;max-width:420px;text-align:left;background:rgba(255,255,255,.1);border-radius:18px;padding:18px}
+.editor.open{display:block}
+label{display:block;font-size:.9rem;margin:10px 0 4px}
+input,textarea{width:100%;font:inherit;padding:10px 12px;border-radius:10px;border:0;color:var(--deep)}
+textarea{min-height:90px;resize:vertical}
+.editor .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+.editor button{padding:10px 20px;font-size:.95rem}
+.hint{font-size:.85rem;opacity:.8;margin-top:10px;min-height:1.2em}
+[hidden]{display:none!important}
+
+@media (prefers-reduced-motion:reduce){
+  .flame,.out .smoke,.card.show{animation:none}
+  .out .smoke{opacity:0}
+}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<main>
+  <h1 id="title">Selamat ulang tahun,<span id="name">Sahabat!</span></h1>
+  <p class="sub" id="sub">Sebelum tumbuh lebih tinggi, tiup dulu lilinnya.</p>
+
+  <div class="stage" id="stage">
+    <svg viewBox="0 0 300 260" role="img" aria-label="Kue ulang tahun dengan tiga lilin">
+      <!-- lilin -->
+      <g>
+        <rect x="88"  y="88" width="14" height="46" rx="3" fill="#d6f55a"/>
+        <rect x="143" y="76" width="14" height="58" rx="3" fill="#ff9b7a"/>
+        <rect x="198" y="88" width="14" height="46" rx="3" fill="#d6f55a"/>
+        <path class="flame" d="M95 60c9 10 9 20 0 26-9-6-9-16 0-26z" fill="#ffd23f"/>
+        <path class="flame" d="M150 48c9 10 9 20 0 26-9-6-9-16 0-26z" fill="#ffd23f"/>
+        <path class="flame" d="M205 60c9 10 9 20 0 26-9-6-9-16 0-26z" fill="#ffd23f"/>
+        <g class="smoke" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round">
+          <path d="M95 70c-6-8 6-14 0-22"/><path d="M150 58c-6-8 6-14 0-22"/><path d="M205 70c-6-8 6-14 0-22"/>
+        </g>
+      </g>
+      <!-- kue -->
+      <rect x="50" y="130" width="200" height="50" rx="12" fill="#f6fff0"/>
+      <path d="M50 148c14 16 24-6 40 8s26-8 40 8 26-8 40 8 26-8 40 8 26-8 40 0v0H50z" fill="#4cc27a"/>
+      <rect x="20" y="176" width="260" height="64" rx="14" fill="#9be3a6"/>
+      <path d="M20 196c22 18 34-8 52 8s34-8 52 8 34-8 52 8 34-8 52 8 26-6 32-4V176H20z" fill="#f6fff0"/>
+      <rect x="10" y="238" width="280" height="10" rx="5" fill="#06301d" opacity=".45"/>
+    </svg>
+  </div>
+
+  <button id="blow" type="button">Tiup lilin</button>
+
+  <article class="card" id="card" aria-live="polite">
+    <p id="msg"></p>
+    <footer id="from"></footer>
+  </article>
+
+  <div class="player" id="player"></div>
+
+  <div class="actions" id="actions">
+    <button class="ghost" id="again" type="button">Nyalain lagi cobaa</button>
+    <!-- <button class="ghost" id="edit" type="button">Buat ucapanmu sendiri</button> -->
+  </div>
+
+  <section class="editor" id="editor">
+    <label for="fName">Nama yang berulang tahun</label>
+    <input id="fName" maxlength="30" placeholder="Contoh: Rina">
+    <label for="fMsg">Ucapan</label>
+    <textarea id="fMsg" maxlength="300" placeholder="Tulis ucapanmu di sini"></textarea>
+    <label for="fFrom">Dari</label>
+    <input id="fFrom" maxlength="30" placeholder="Nama pengirim">
+    <div class="row">
+      <button id="apply" type="button">Terapkan</button>
+      <button id="copy" type="button">Salin tautan</button>
+    </div>
+    <p class="hint" id="hint" role="status"></p>
+  </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
